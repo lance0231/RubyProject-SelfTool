@@ -1,6 +1,7 @@
 #require 'rubygems'
-#require 'serialport'
-require "../serialport.so"
+#require "serialport"
+#require "../serialport.so"
+require "socket"
 
 def ComInit( config )
 	begin
@@ -20,7 +21,29 @@ def ComInit( config )
 		puts("Can not read config file")		
 		nil   # 無法寫入檔案？那就不傳回字串
 	ensure
-		file.close   # ... 這總是會發生的。		
+		file.close   # ... 確定一定要做的	
+	end
+end
+
+def TcpSeverInit
+	begin
+		port = 8080
+		server = TCPServer.new("0.0.0.0",port)
+		loop{
+			puts("connecting...")
+			Thread.fork(server.accept){|sock|
+			begin
+				#puts("connecting...")
+			ensure
+				sock.close unless sock.closed?
+			end
+			}
+		}
+	rescue
+		puts("Create TCP Server Fail")		
+		nil  
+	ensure
+		# ... 確定一定要做的		
 	end
 end
 
@@ -34,7 +57,7 @@ def ReadRequestData( filename )
 		puts("Can not read file")		
 		nil   # 無法讀取檔案？那就不傳回字串
 	ensure
-		file.close   # ... 這總是會發生的。		
+		file.close   # 確定一定要做的	
 	end
 end
 
@@ -48,22 +71,24 @@ def SaveResponseData( filename ,data)
 		puts("Can not write file")		
 		nil   # 無法寫入檔案？那就不傳回字串
 	ensure
-		file.close   # ... 這總是會發生的。		
+		file.close   # 確定一定要做的	
 	end
 end
 
 
 
-puts("Filetest")
+puts("File test")
 puts(" ")
 puts("FileRead")
 puts(ReadRequestData("TestData.dat"))
-puts("readend")
+puts("read end")
 puts("FileWrite")
-puts(SaveResponseData("TestWriteData.dat","I am stupid person"))
-puts("writeend")
+puts(SaveResponseData("TestWriteData.dat","I am a stupid person"))
+puts("write end")
 
 ComInit("EcrDat.dat")
+
+TcpSeverInit()
 
 puts("end")
 
