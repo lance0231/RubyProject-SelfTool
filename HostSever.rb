@@ -23,11 +23,22 @@ def TcpSeverInit
 	end
 end
 
-def SaveReceiveData( filename , data, datalen)
+def SaveReceiveData( filename , data)
 	begin
 		puts(filename)
 		file = open(filename,"w")
-		info = file.write(data,datalen)
+		if ( File.writable?(filename) == true)
+			puts("檔案可被寫入")
+		else
+			puts("檔案不可被寫入")
+		end
+#		info = file.write(data,datalen)
+		info = file.write(data)
+#		@NowLoc = 0
+#		while @NowLoc <= datalen
+#			file.putc(data[@NowLoc])
+#			@NowLoc = @NowLoc + 1
+#		end	
 		info  # 最後計算的內容為傳回值
 	rescue
 		puts("Can not write file")		
@@ -39,7 +50,8 @@ end
 
 
 puts("檔案寫入")
-puts(SaveReceiveData("TestWriteData.dat","I am a stupid person"),18)
+data = [0x12,0x13,0x14]
+puts(SaveReceiveData("TestWriteData.dat",data))
 puts("write end")
 TcpSeverInit()
 
