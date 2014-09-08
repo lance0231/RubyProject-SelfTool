@@ -3,7 +3,7 @@ require "socket"
 
 def TcpClientTest
 	begin
-		port = 8080
+		port = 8012
 		client = TCPSocket.open("localhost",port)
 		client.write("123456")
 		

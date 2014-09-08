@@ -4,7 +4,7 @@ require "socket"
 def SaveReceiveData( filename , data)
 	begin
 		puts(filename)
-		file = open(filename,"w")
+		file = open(filename,"wb")
 		if ( File.writable?(filename) == true)
 			puts("檔案可被寫入")
 		else
@@ -27,7 +27,7 @@ end
 
 def TcpSeverBuild
 	begin
-		port = 8080
+		port = 8012
 		server = TCPServer.new("0.0.0.0",port)
 		loop{
 			puts("connecting...")
